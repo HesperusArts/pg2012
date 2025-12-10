@@ -1,0 +1,493 @@
+@font-face {
+  font-family: "Din Condensed Web";
+  src: url('./assets/DinCondensed.ttf');
+}
+
+@keyframes powered {
+  0% {
+    filter: drop-shadow(0px 0px 0 #fc00) drop-shadow(0px 0px 0 #fc00) brightness(1);
+    transform: scale(1);
+  }
+
+  95% {
+    filter: drop-shadow(0px 0px 3em #fc0) drop-shadow(0px 0px 3em #fc0) brightness(4);
+    transform: scale(1.2);
+  }
+
+  100% {
+    filter: drop-shadow(0px 0px 2em #fc0) drop-shadow(0px 0px 2em #fc0) brightness(1.5);
+    transform: scale(1);
+  }
+}
+
+body {
+  html.dark & {
+    background: #335;
+  }
+
+  font-family: 'Din Condensed Web';
+}
+
+#setup {
+  font-size: 1rem;
+  background: none;
+}
+
+#game {
+  overflow: hidden;
+  #step-phase {
+    font-size: .35em;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    padding: 0.2em 0.5em;
+    background: #fff8;
+    border-radius: 0 0.5em 0 0;
+    border: 0.1em solid black;
+    border-width: 0.1em 0.1em 0 0;
+    #turn-markers {
+      text-align: center;
+      line-height: .5em;
+      .turn-marker {
+        width: .5em;
+        height: .5em;
+        display: inline-block;
+        margin: 0 .1em;
+      }
+    }
+    img {
+      width: 2.5em;
+    }
+  }
+
+  #sea {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: #ccf;
+    z-index: -2;
+  }
+
+  #cover {
+    background: #fff9;
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    z-index: -1;
+  }
+
+  .selectable {
+    transition: transform .2s;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  #germany {
+    img#germany {
+      width: 222.2222%;
+      height: 100%;
+      position: absolute;
+      left: -5%;
+      z-index: -2;
+      html.dark & {
+        filter: brightness(.7);
+      }
+    }
+    circle {
+      html.dark & {
+        fill: #aaf;
+      }
+    }
+    line.inner {
+      html.dark & {
+        stroke: #ccf;
+      }
+    }
+    .out-of-zone {
+      filter: contrast(0.2) brightness(1.5);
+    }
+  }
+
+  &[data-step="selectZone"] #germany .out-of-zone {
+    filter: none;
+  }
+
+  #powerplants {
+    .bid {
+      position: absolute;
+      right: 59.5%;
+      top: 6%;
+      font-size: 1.25em;
+      padding: 0.2em 0.4em 0.2em 1em;
+      text-align: right;
+      color: white;
+      clip-path: polygon(0% 0%, 10% 100%, 100% 100%, 100% 0);
+      border-radius: 0 0.3em 0.3em 0;
+    }
+  }
+
+  .City {
+    &.selectable svg {
+      filter: drop-shadow(0em 0em 1.5em #003)
+    }
+    .name {
+      color: black;
+      background: black;
+      padding: 5%;
+      position: absolute;
+      bottom: -20%;
+      font-size: 1.2em;
+      width: 100%;
+      text-align: center;
+      > div {
+        background: white
+      }
+    }
+    &[data-zone="green"] {
+      color: green;
+    }
+    &[data-zone="red"] {
+      color: red;
+    }
+    &[data-zone="brown"] {
+      color: brown;
+    }
+    &[data-zone="yellow"] {
+      color: #550;
+    }
+    &[data-zone="blue"] {
+      color: blue;
+    }
+    &[data-zone="purple"] {
+      color: purple;
+    }
+    .Building svg {
+      filter: drop-shadow(1em 1em 1em black);
+    }
+    .Building.newly-powered {
+      animation: powered .5s forwards;
+    }
+    .Building[data-powered="true"] {
+      filter: drop-shadow(0px 0px 2em #fc0) drop-shadow(0px 0px 2em #fc0) brightness(1.5);
+    }
+  }
+
+  .ResourceSpace .cost {
+    position: absolute;
+    left: 0;
+    top: 12%;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    color: white;
+    font-size: 7.5em;
+    text-align: center;
+    font-weight: bold;
+    &.empty {
+      color: black;
+    }
+    html.dark & {
+      color: black;
+    }
+  }
+
+  .Resource {
+    background: none;
+    html.dark & {
+      filter: invert(.6);
+    }
+  }
+
+  .Building {
+    background: none;
+  }
+
+  #deck div.count {
+    text-align: right;
+    position: absolute;
+    z-index: 50;
+    color: #fff5;
+    top: 20%;
+    right: 0;
+    font-size: 2em;
+    margin-right: 18%;
+  }
+
+  .Card {
+    background: none;
+    &.selectable {
+      > div.outer {
+        box-shadow: 0em 0em 3em #ff08;
+        background: #cc0;
+      }
+    }
+
+    &[data-auction=true] {
+      transform: scale(1.25);
+      z-index: 50;
+    }
+
+    > div.outer {
+      border-radius: 7%;
+      border: .1em solid black;
+      width: 100%;
+      height: 100%;
+      box-shadow: .2em .2em .2em #0006;
+      background: #999;
+      &.powerable {
+        box-shadow: 0em 0em 3em #ff08;
+        background: #cc0;
+      }
+      img.background {
+        left: 7%;
+        top: 7%;
+        width: 86%;
+        height: 70%;
+        position: absolute;
+        border-radius: .25em .25em 0 0;
+      }
+      > div.inner {
+        border-radius: 4%;
+        border: 0.1em solid black;
+        position: absolute;
+        left: 7%;
+        top: 7%;
+        width: 86%;
+        height: 86%;
+        .cost {
+          font-weight: bold;
+          color: white;
+          text-shadow:
+            0.1em 0 0 #000,
+            -0.05em 0 0 #000,
+            0 -0.05em 0 #000,
+            0 0.1em 0 #000,
+            0.1em -0.05em 0 #000,
+            -0.05em -0.05em 0 #000,
+            0.1em 0.1em 0 #000,
+            -0.05em 0.1em 0 #000;
+          font-size: 2.8em;
+          position: absolute;
+          left: -3%;
+          top: -5%;
+          .old-cost {
+            text-decoration: line-through;
+            vertical-align: text-top;
+          }
+          .new-cost {
+            font-size: 1.4em;
+            color: yellow;
+            vertical-align: text-top;
+          }
+        }
+        .production {
+          position: absolute;
+          width: 100%;
+          height: 20%;
+          left: 0%;
+          bottom: 0%;
+          border-radius: 0 0 .25em .25em;
+          &.oil {
+            background: #555;
+          }
+          &.coal, &.hybrid {
+            background: #a17c45;
+          }
+          &.garbage {
+            background: #fc6;
+          }
+          &.uranium {
+            background: #d44;
+          }
+          &.clean {
+            background: #35f;
+          }
+          text-align: center;
+          > img {
+            width: 15%;
+            height: 70%;
+            top: -10%;
+            position: relative;
+            margin: 1%;
+          }
+          > svg {
+            top: 0%;
+            position: relative;
+            width: 22%;
+            height: 100%;
+          }
+        }
+        .hybrid2 {
+          background: #555;
+          position: absolute;
+          top: 50%;
+          height: 50%;
+          width: 100%;
+        }
+      }
+      .step-3 {
+        position: absolute;
+        font-size: 2.6em;
+        text-align: center;
+        width: 100%;
+        background: #aaa;
+        bottom: 0;
+        border-top: 0.1em solid black;
+      }
+    }
+    .Resource {
+      &.selectable {
+        filter: drop-shadow(1em 1em 1em yellow);
+      }
+      &.selected {
+        filter: drop-shadow(1em 1em 1em red);
+      }
+      img {
+        filter: drop-shadow(1em 1em .5em #222);
+      }
+    }
+  }
+
+  .ElektroMat {
+    .elektro {
+      top: 42%;
+      position: absolute;
+      left: 10%;
+      height: 30%;
+      width: 38%;
+
+      html.dark & {
+        filter: invert(1);
+      }
+    }
+  }
+
+  .PlayerMat {
+    .lightning {
+      top: 42%;
+      position: absolute;
+      left: 10%;
+      width: 10%;
+      height: 40%;
+    }
+
+    .building {
+      top: 42%;
+      position: absolute;
+      left: 0%;
+      width: 10%;
+      height: 40%;
+    }
+
+    .profile-badge {
+      position: absolute;
+      left: .5%;
+      top: 2%;
+      font-size: 360%;
+      .player-name {
+        font-size: 50%;
+        margin-top: .28em;
+      }
+    }
+  }
+}
+
+.player-controls {
+  box-shadow: .2em .2em .4em #000c;
+  background: linear-gradient(to bottom, #99cc, #aafc 85%, #99cc);
+  &.step-purchaseResources {
+    font-size: .5rem;
+    button, input {
+      padding: .1rem .2rem;
+    }
+  }
+  &.step-auction, &.step-bid, &.step-purchaseResources {
+    text-align: right;
+  }
+  &.step-bid button {
+    width: 4em;
+  }
+}
+
+.player-controls, #info-drawer {
+  button, label {
+    padding: .1rem .2rem;
+    border-width: 0;
+    border-radius: .2em;
+    text-shadow: .1em .1em 0 #fff5;
+    box-shadow: .1em .1em .2em #0008, inset .1em .1em 0 #fff9;
+    background: linear-gradient(to bottom, #dcd,  #aab 85%, #cce);
+  }
+}
+
+#info-modal {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    th {
+      border-bottom: .1rem solid black;
+    }
+    th, td {
+      padding: .1rem .2rem;
+      text-align: center;
+    }
+    tr:nth-child(even) {
+      background: #ccc;
+    }
+
+    &.small {
+      width: 10rem;
+    }
+
+    &.split {
+      th:nth-child(even) {
+        padding-right: 2.5rem;
+      }
+      td:nth-child(odd) {
+        text-align: right;
+      }
+      td:nth-child(even) {
+        text-align: left;
+      }
+    }
+  }
+}
+
+#game.mobile {
+  .PlayerMat {
+    background: white;
+    .name {
+      font-size: .75em;
+    }
+    .profile-badge {
+      font-size: 200%;
+    }
+  }
+
+  .ResourceSpace .cost {
+    font-size: 4.5em;
+  }
+
+  #player-controls {
+    font-size: .3rem;
+    padding: .1rem;
+    &.auction, &.bid, &.purchaseResources {
+      text-align: right;
+    }
+  }
+
+  #play-area {
+    #step-phase {
+      font-size: .15em;
+      bottom: 22%;
+    }
+
+    #cover {
+      display: none;
+    }
+  }
+}
